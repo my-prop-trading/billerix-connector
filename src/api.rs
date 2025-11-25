@@ -37,7 +37,7 @@ impl BillerixApi {
         &self,
         req: &ApiRequest<OneTimePaymentRequest>,
     ) -> Result<OneTimePaymentResponse, String> {
-        let endpoint = "/api/v3/initials/one-time/url";
+        let endpoint = "api/v3/initials/one-time/url";
         let method = Method::POST;
         self.send_flurl_deserialized(endpoint, &method, req).await
     }
