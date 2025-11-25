@@ -1,4 +1,4 @@
-use crate::model::{ApiRequest, CreateOrderResponse};
+use crate::model::{ApiRequest, CreateOrderResponse, GeoInfoRequest, GeoInfoResponse};
 use crate::{format_date, model::CreateOrderRequest};
 use chrono::Utc;
 use flurl::{hyper::Method, FlUrl};
@@ -8,7 +8,7 @@ use std::time::Duration;
 
 pub struct BillerixApi {
     base_url: String,
-    _merchant_code: String,
+    merchant_code: String,
     public_key: String,
     secret_key: String,
     timeout: Duration,
@@ -24,7 +24,7 @@ impl BillerixApi {
     ) -> Self {
         Self {
             base_url: base_url.into(),
-            _merchant_code: merchant_code.into(),
+            merchant_code: merchant_code.into(),
             public_key: public_key.into(),
             secret_key: secret_key.into(),
             timeout,
@@ -38,6 +38,24 @@ impl BillerixApi {
         let endpoint = "todo";
         let method = Method::POST;
         self.send_flurl_deserialized(endpoint, &method, req).await
+    }
+
+    pub async fn geo_info(&self, ip: impl Into<String>) -> Result<GeoInfoResponse, String> {
+        let endpoint = "/api/v3/geoip/info ";
+        let method = Method::GET;
+        let ip = ip.into();
+        self.send_flurl_deserialized(
+            endpoint,
+            &method,
+            &ApiRequest {
+                ip: ip.clone(),
+                data: GeoInfoRequest {
+                    ip,
+                    merchant: self.merchant_code.clone(),
+                },
+            },
+        )
+        .await
     }
 
     async fn send_flurl_deserialized<R: Serialize + Debug, T: DeserializeOwned + Debug>(
@@ -68,7 +86,7 @@ impl BillerixApi {
     ) -> Result<String, String> {
         let request_json = serde_json::to_string(&request.data).map_err(|e| format!("{:?}", e))?;
         let request_bytes: Option<Vec<u8>> = Some(request_json.clone().into_bytes());
-        let flurl = self.build_flurl(endpoint, &request.buyer_ip);
+        let flurl = self.build_flurl(endpoint, &request.ip);
 
         let result = if method == Method::GET {
             flurl.get().await
