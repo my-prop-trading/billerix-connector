@@ -1,8 +1,8 @@
-use std::time::Duration;
+use std::{collections::HashMap,time::Duration};
 
 use billerix_connector::{
     api::BillerixApi,
-    model::{ApiRequest, CreateOrderRequest},
+    model::{ApiRequest, OneTimePaymentRequest, PriceModel},
 };
 
 #[tokio::main]
@@ -24,9 +24,19 @@ async fn main() {
     println!("{result:?}");
 
     let result = api
-        .create_order(&ApiRequest {
+        .one_time_payment(&ApiRequest {
             ip: ip.to_string(),
-            data: CreateOrderRequest {},
+            data: OneTimePaymentRequest {
+                metadata: Some(HashMap::from([(
+                    "test-key".to_string(),
+                    "test-value".to_string(),
+                )])),
+                price: PriceModel {
+                    amount: 5.0,
+                    currency: "USD".to_string(),
+                },
+                buyer: None,
+            },
         })
         .await;
     println!("{result:?}");

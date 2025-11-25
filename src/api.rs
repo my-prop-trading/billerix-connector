@@ -1,5 +1,7 @@
-use crate::model::{ApiRequest, CreateOrderResponse, GeoInfoRequest, GeoInfoResponse};
-use crate::{format_date, model::CreateOrderRequest};
+use crate::format_date;
+use crate::model::{
+    ApiRequest, GeoInfoRequest, GeoInfoResponse, OneTimePaymentRequest, OneTimePaymentResponse,
+};
 use chrono::Utc;
 use flurl::{hyper::Method, FlUrl};
 use serde::{de::DeserializeOwned, Serialize};
@@ -31,11 +33,11 @@ impl BillerixApi {
         }
     }
 
-    pub async fn create_order(
+    pub async fn one_time_payment(
         &self,
-        req: &ApiRequest<CreateOrderRequest>,
-    ) -> Result<CreateOrderResponse, String> {
-        let endpoint = "todo";
+        req: &ApiRequest<OneTimePaymentRequest>,
+    ) -> Result<OneTimePaymentResponse, String> {
+        let endpoint = "/api/v3/initials/one-time/url";
         let method = Method::POST;
         self.send_flurl_deserialized(endpoint, &method, req).await
     }
