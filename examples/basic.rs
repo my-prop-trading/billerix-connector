@@ -1,8 +1,7 @@
 use std::{collections::HashMap, time::Duration};
-
 use billerix_connector::{
     api::BillerixApi,
-    model::{ApiRequest, OneTimePaymentRequest, PriceModel, Source},
+    model::{ApiRequest, BuyerModel, OneTimePaymentRequest, PriceModel, Source},
 };
 
 #[tokio::main]
@@ -22,15 +21,15 @@ async fn main() {
     let ip = "66.94.29.13";
     let source = Source::Shop;
     let source_id = "local";
-    let result = api
-        .geo_info(ApiRequest {
-            ip: ip.to_string(),
-            data: (),
-            source,
-            source_id: source_id.to_string(),
-        })
-        .await;
-    println!("{result:?}");
+    // let result = api
+    //     .geo_info(ApiRequest {
+    //         ip: ip.to_string(),
+    //         data: (),
+    //         source,
+    //         source_id: source_id.to_string(),
+    //     })
+    //     .await;
+    // println!("{result:?}");
 
     let result = api
         .one_time_payment(&ApiRequest {
@@ -42,10 +41,13 @@ async fn main() {
                     "test-value".to_string(),
                 )])),
                 price: PriceModel {
-                    amount: 5.0,
+                    amount: 500.0,
                     currency: "USD".to_string(),
                 },
-                buyer: None,
+                buyer: Some(BuyerModel {
+                    email: "adsffasfsadfd@mailinator.com".to_string(),
+                    locale: "en".to_string(),
+                }),
             },
             source_id: source_id.to_string(),
         })

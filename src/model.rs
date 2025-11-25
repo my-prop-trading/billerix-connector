@@ -39,6 +39,11 @@ pub struct ApiRequest<T: Serialize> {
     pub source_id: String,
 }
 
+#[derive(Debug, Deserialize)]
+pub struct ApiResponse<T> {
+    pub data: T,
+}
+
 #[derive(Debug, Serialize, Clone)]
 pub struct GeoInfoRequest {
     pub ip: String,
@@ -74,4 +79,6 @@ pub struct BuyerModel {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct OneTimePaymentResponse {}
+pub struct OneTimePaymentResponse {
+    pub url: String,
+}
