@@ -10,14 +10,9 @@ pub fn format_date(date: DateTime<Utc>) -> String {
     date.format("%Y-%m-%dT%H:%M:%S").to_string()
 }
 
-pub fn generate_token(
-    secret_key: &str,
-    public_key: &str,
-    buyer_ip: &str,
-    date: DateTime<Utc>,
-) -> String {
+pub fn generate_token(secret_key: &str, public_key: &str, ip: &str, date: DateTime<Utc>) -> String {
     let date_str = format_date(date);
-    let token_string = format!("{secret_key}{public_key}{buyer_ip}{date_str}");
+    let token_string = format!("{secret_key}{public_key}{ip}{date_str}");
     let mut mac =
         Hmac::<Sha256>::new_from_slice(secret_key.as_bytes()).expect("HMAC can take any key size");
     mac.update(token_string.as_bytes());

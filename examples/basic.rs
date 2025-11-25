@@ -7,10 +7,11 @@ use billerix_connector::{
 
 #[tokio::main]
 async fn main() {
-    let base_url = "https://pay-sandbox.billerbase.com/";
+    let base_url = "https://pay-sandbox.billerbase.com";
     let merchant_code = std::env::var("BILLERIX_MERCHANT_CODE").unwrap();
     let public_key = std::env::var("BILLERIX_PUBLIC_KEY").unwrap();
     let secrete_key = std::env::var("BILLERIX_SECRET_KEY").unwrap();
+
     let api = BillerixApi::new(
         base_url,
         merchant_code,

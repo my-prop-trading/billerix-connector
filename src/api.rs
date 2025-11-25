@@ -41,7 +41,7 @@ impl BillerixApi {
     }
 
     pub async fn geo_info(&self, ip: impl Into<String>) -> Result<GeoInfoResponse, String> {
-        let endpoint = "/api/v3/geoip/info ";
+        let endpoint = "api/v3/geoip/info";
         let method = Method::GET;
         let ip = ip.into();
         self.send_flurl_deserialized(
@@ -132,8 +132,10 @@ impl BillerixApi {
             .with_header("Accept", content_str)
             .with_header("x-public-key", &self.public_key)
             .with_header("x-buyer-ip", ip)
+            .with_header("ip", ip)
             .with_header("x-date", format_date(date)) // 2024-01-27T23:59:59
             .with_header("x-token", token)
+            .with_header("merchant", &self.merchant_code)
     }
 }
 
