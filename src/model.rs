@@ -1,10 +1,42 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-use serde::{Deserialize, Serialize};
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "lowercase")]
+pub enum Source {
+    /// Саппорт-панель (staff panel)
+    Staff,
+
+    /// Сторінки магазину (shop)
+    Shop,
+
+    /// Контрольна панель клієнта/баєра (client panel)
+    Cp,
+
+    /// Пряма лінка на ордер (directlink)
+    Directlink,
+
+    /// Відділ продажів (sales)
+    Sales,
+}
+
+impl Source {
+    pub fn as_str(&self) -> &'static str {
+        match self {
+            Source::Staff => "staff",
+            Source::Shop => "shop",
+            Source::Cp => "cp",
+            Source::Directlink => "directlink",
+            Source::Sales => "sales",
+        }
+    }
+}
 
 pub struct ApiRequest<T: Serialize> {
     pub ip: String,
     pub data: T,
+    pub source: Source,
+    pub source_id: String,
 }
 
 #[derive(Debug, Serialize, Clone)]

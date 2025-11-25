@@ -42,19 +42,20 @@ impl BillerixApi {
         self.send_flurl_deserialized(endpoint, &method, req).await
     }
 
-    pub async fn geo_info(&self, ip: impl Into<String>) -> Result<GeoInfoResponse, String> {
+    pub async fn geo_info(&self, req: ApiRequest<()>) -> Result<GeoInfoResponse, String> {
         let endpoint = "api/v3/geoip/info";
         let method = Method::GET;
-        let ip = ip.into();
         self.send_flurl_deserialized(
             endpoint,
             &method,
             &ApiRequest {
-                ip: ip.clone(),
+                ip: req.ip.clone(),
                 data: GeoInfoRequest {
-                    ip,
+                    ip: req.ip,
                     merchant: self.merchant_code.clone(),
                 },
+                source: req.source,
+                source_id: req.source_id,
             },
         )
         .await
@@ -88,7 +89,7 @@ impl BillerixApi {
     ) -> Result<String, String> {
         let request_json = serde_json::to_string(&request.data).map_err(|e| format!("{:?}", e))?;
         let request_bytes: Option<Vec<u8>> = Some(request_json.clone().into_bytes());
-        let flurl = self.build_flurl(endpoint, &request.ip);
+        let flurl = self.build_flurl(endpoint, request);
 
         let result = if method == Method::GET {
             flurl.get().await
@@ -116,28 +117,30 @@ impl BillerixApi {
         handle_flurl_resp(resp, Some(&request_json), endpoint, method).await
     }
 
-    fn build_flurl(&self, endpoint: &str, ip: &str) -> FlUrl {
+    fn build_flurl<T: Serialize>(&self, endpoint: &str, req: &ApiRequest<T>) -> FlUrl {
         let url = format!("{}/{}", self.base_url, endpoint);
         let flurl = FlUrl::new(&url).set_timeout(self.timeout);
-        let flurl = self.add_headers(flurl, ip);
+        let flurl = self.add_headers(flurl, req);
 
         flurl
     }
 
-    fn add_headers(&self, flurl: FlUrl, ip: &str) -> FlUrl {
+    fn add_headers<T: Serialize>(&self, flurl: FlUrl, req: &ApiRequest<T>) -> FlUrl {
         let content_str = "application/json";
         let date = Utc::now();
-        let token = crate::generate_token(&self.secret_key, &self.public_key, ip, date);
+        let token = crate::generate_token(&self.secret_key, &self.public_key, &req.ip, date);
 
         flurl
             .with_header("Content-Type", content_str)
             .with_header("Accept", content_str)
             .with_header("x-public-key", &self.public_key)
-            .with_header("x-buyer-ip", ip)
-            .with_header("ip", ip)
+            .with_header("x-buyer-ip", &req.ip)
+            .with_header("ip", &req.ip)
             .with_header("x-date", format_date(date)) // 2024-01-27T23:59:59
             .with_header("x-token", token)
             .with_header("merchant", &self.merchant_code)
+            .with_header("x-source", req.source.as_str())
+            .with_header("x-id", &req.source_id)
     }
 }
 

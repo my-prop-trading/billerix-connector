@@ -1,8 +1,8 @@
-use std::{collections::HashMap,time::Duration};
+use std::{collections::HashMap, time::Duration};
 
 use billerix_connector::{
     api::BillerixApi,
-    model::{ApiRequest, OneTimePaymentRequest, PriceModel},
+    model::{ApiRequest, OneTimePaymentRequest, PriceModel, Source},
 };
 
 #[tokio::main]
@@ -19,13 +19,23 @@ async fn main() {
         secrete_key,
         Duration::from_secs(15),
     );
-    let ip = "127.0.0.1";
-    let result = api.geo_info(ip).await;
+    let ip = "66.94.29.13";
+    let source = Source::Shop;
+    let source_id = "local";
+    let result = api
+        .geo_info(ApiRequest {
+            ip: ip.to_string(),
+            data: (),
+            source,
+            source_id: source_id.to_string(),
+        })
+        .await;
     println!("{result:?}");
 
     let result = api
         .one_time_payment(&ApiRequest {
             ip: ip.to_string(),
+            source: source.clone(),
             data: OneTimePaymentRequest {
                 metadata: Some(HashMap::from([(
                     "test-key".to_string(),
@@ -37,6 +47,7 @@ async fn main() {
                 },
                 buyer: None,
             },
+            source_id: source_id.to_string(),
         })
         .await;
     println!("{result:?}");
