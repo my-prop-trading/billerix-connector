@@ -1,8 +1,8 @@
-use std::{collections::HashMap, time::Duration};
 use billerix_connector::{
     api::BillerixApi,
     model::{ApiRequest, BuyerModel, OneTimePaymentRequest, PriceModel, Source},
 };
+use std::{collections::HashMap, time::Duration};
 
 #[tokio::main]
 async fn main() {
