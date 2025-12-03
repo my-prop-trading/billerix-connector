@@ -47,12 +47,12 @@ pub struct OrderModel {
 pub struct PaymentMethod {
     #[serde(rename = "type")]
     pub method_type: String,
-    pub data: PaymentMethodData,
+    pub data: Option<PaymentMethodData>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PaymentMethodData {
-    pub bin: String,
+    pub bin: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
