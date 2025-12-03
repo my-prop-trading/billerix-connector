@@ -40,6 +40,7 @@ pub struct OrderModel {
     pub order_type: String,
     pub currency: String,
     pub amount: String,
+    #[serde(rename = "metaData")]
     pub metadata: Option<HashMap<String, String>>,
 }
 
