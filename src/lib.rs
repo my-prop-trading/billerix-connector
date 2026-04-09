@@ -1,6 +1,7 @@
 pub mod api;
 pub mod model;
 pub mod webhook;
+pub mod subscription;
 
 use chrono::{DateTime, Utc};
 use hmac::{Hmac, Mac};
