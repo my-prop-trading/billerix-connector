@@ -6,7 +6,7 @@ pub struct SubscriptionWebhookModel {
     #[serde(rename = "type")]
     pub event_type: String,
 
-    pub action: SubscriptionAction,
+    pub action: SubscriptionActionWrapper,
     pub merchant: String,
 
     #[serde(rename = "chargeId")]
