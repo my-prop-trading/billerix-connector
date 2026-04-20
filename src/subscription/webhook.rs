@@ -141,8 +141,8 @@ pub struct Buyer {
     pub id: String,
     pub email: String,
 
-    #[serde(rename = "metaData")]
-    pub meta_data: Vec<serde_json::Value>, // unknown structure
+    // #[serde(rename = "metaData")]
+    // pub meta_data: Vec<serde_json::Value>, // unknown structure
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -156,8 +156,8 @@ pub struct SubscriptionData {
     #[serde(rename = "buyerEmail")]
     pub buyer_email: String,
 
-    #[serde(rename = "buyerMetaData")]
-    pub buyer_meta_data: Vec<serde_json::Value>,
+    // #[serde(rename = "buyerMetaData")]
+    // pub buyer_meta_data: Vec<serde_json::Value>,
 
     #[serde(rename = "startDate")]
     pub start_date: NaiveDateTime,
