@@ -30,6 +30,16 @@ pub struct ChargeData {
     #[serde(rename = "paymentMethod")]
     pub payment_method: PaymentMethod,
     pub provider: Provider,
+    #[serde(rename = "declineData")]
+    pub decline_data: Option<DeclineData>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DeclineData {
+    pub r#type: String,
+    #[serde(rename = "errorMessage")]
+    pub error_message: Option<String>,
+    pub code: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
