@@ -1,7 +1,7 @@
 use crate::format_date;
 use crate::model::{
-    ApiRequest, ApiResponse, GeoInfoRequest, GeoInfoResponse, OneTimePaymentRequest,
-    OneTimePaymentResponse,
+    ApiRequest, ApiResponse, DisableSubscriptionRequest, GeoInfoRequest, GeoInfoResponse,
+    OneTimePaymentRequest, OneTimePaymentResponse,
 };
 use chrono::Utc;
 use flurl::{hyper::Method, FlUrl};
@@ -41,6 +41,18 @@ impl BillerixApi {
         let endpoint = "api/v3/initials/one-time/url";
         let method = Method::POST;
         self.send_flurl_deserialized(endpoint, &method, req).await
+    }
+
+    pub async fn disable_subscription(
+        &self,
+        buyer_id: &str,
+        subscription_id: &str,
+        req: &ApiRequest<DisableSubscriptionRequest>,
+    ) -> Result<(), String> {
+        let endpoint =
+            format!("api/v2/buyers/{buyer_id}/subscriptions/{subscription_id}/disable");
+        let method = Method::PUT;
+        self.send_flurl(&endpoint, &method, req).await.map(|_| ())
     }
 
     pub async fn geo_info(&self, req: ApiRequest<()>) -> Result<GeoInfoResponse, String> {

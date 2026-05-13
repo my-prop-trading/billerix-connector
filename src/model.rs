@@ -82,3 +82,8 @@ pub struct BuyerModel {
 pub struct OneTimePaymentResponse {
     pub url: String,
 }
+
+#[derive(Debug, Serialize)]
+pub struct DisableSubscriptionRequest {
+    pub reason: String,
+}
