@@ -48,6 +48,7 @@ async fn main() {
                     email: "adsffasfsadfd@mailinator.com".to_string(),
                     locale: "en".to_string(),
                 }),
+                return_url: "test.com".to_string(),
             },
             source_id: source_id.to_string(),
         })

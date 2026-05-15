@@ -64,6 +64,8 @@ pub struct OneTimePaymentRequest {
     pub metadata: Option<HashMap<String, String>>,
     pub price: PriceModel,
     pub buyer: Option<BuyerModel>,
+    #[serde(rename = "returnUrl")]
+    pub return_url: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
